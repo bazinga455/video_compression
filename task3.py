@@ -28,7 +28,7 @@ imgs_bubble = load_images(folder_blowing_bubbles)
 imgs_horse = load_images(folder_race_horses)
 
 
-def conv(orig_imgs, ratio, train_percentage, learning_rate, epochs, pic_name):
+def conv(orig_imgs, ratio, train_percentage, learning_rate, epochs, pic_name, method):
     width_pad = orig_imgs[0].width % ratio 
     height_pad = orig_imgs[0].height % ratio
     input_img_array = None
@@ -45,70 +45,122 @@ def conv(orig_imgs, ratio, train_percentage, learning_rate, epochs, pic_name):
 
 
     e = Conv2D(64, (7, 7), activation='relu', padding='same', strides=(2, 2))(input_img)
-    if ratio == 2:
-        e = Conv2D(32, (5, 5), activation='relu', padding='same')(e)
-        e = Conv2D(16, (3, 3), activation='relu', padding='same')(e)
-        e = Conv2D(3, (3, 3), activation='relu', padding='same')(e)
-
-        d = Conv2DTranspose(16, kernel_size=(3, 3), padding="SAME", activation='relu')(e)
-        d = Conv2DTranspose(32, kernel_size=(5, 5), padding="SAME", activation='relu')(d)
-        d = Conv2DTranspose(64, kernel_size=(7, 7), padding="SAME", activation='relu')(d)
-    elif ratio == 4:
-        e = MaxPooling2D((2, 2))(e)
-        e = Conv2D(32, (5, 5), activation='relu', padding='same')(e)
-        e = Conv2D(16, (3, 3), activation='relu', padding='same')(e)
-        e = Conv2D(3, (3, 3), activation='relu', padding='same')(e)
-
-        d = Conv2DTranspose(16, kernel_size=(3, 3), padding="SAME", activation='relu')(e)
-        d = Conv2DTranspose(32, kernel_size=(5, 5), padding="SAME", activation='relu')(d)
-        d = Conv2DTranspose(1, kernel_size=(1, 1), padding="SAME", strides=(2, 2), activation='relu')(d)
-        d = Conv2DTranspose(64, kernel_size=(7, 7), padding="SAME", activation='relu')(d)
-    elif ratio == 8:
-        e = MaxPooling2D((2, 2))(e)
-        e = Conv2D(32, (5, 5), activation='relu', padding='same')(e)
-        e = MaxPooling2D((2, 2))(e)
-        e = Conv2D(16, (3, 3), activation='relu', padding='same')(e)
-        e = Conv2D(3, (3, 3), activation='relu', padding='same')(e)
-
-        d = Conv2DTranspose(16, kernel_size=(3, 3), padding="SAME", activation='relu')(e)
-        d = Conv2DTranspose(1, kernel_size=(1, 1), padding="SAME", strides=(2, 2), activation='relu')(d)
-        d = Conv2DTranspose(32, kernel_size=(5, 5), padding="SAME", activation='relu')(d)
-        d = Conv2DTranspose(1, kernel_size=(1, 1), padding="SAME", strides=(2, 2), activation='relu')(d)
-        d = Conv2DTranspose(64, kernel_size=(7, 7), padding="SAME", activation='relu')(d)
-    elif ratio == 16:
-        e = MaxPooling2D((2, 2))(e)
-        e = Conv2D(32, (5, 5), activation='relu', padding='same')(e)
-        e = MaxPooling2D((2, 2))(e)
-        e = Conv2D(16, (3, 3), activation='relu', padding='same')(e)
-        e = MaxPooling2D((2, 2))(e)
-        e = Conv2D(3, (3, 3), activation='relu', padding='same')(e)
-
-        d = Conv2DTranspose(1, kernel_size=(1, 1), padding="SAME", strides=(2, 2), activation='relu')(e)
-        d = Conv2DTranspose(16, kernel_size=(3, 3), padding="SAME", activation='relu')(d)
-        d = Conv2DTranspose(1, kernel_size=(1, 1), padding="SAME", strides=(2, 2), activation='relu')(d)
-        d = Conv2DTranspose(32, kernel_size=(5, 5), padding="SAME", activation='relu')(d)
-        d = Conv2DTranspose(1, kernel_size=(1, 1), padding="SAME", strides=(2, 2), activation='relu')(d)
-        d = Conv2DTranspose(64, kernel_size=(7, 7), padding="SAME", activation='relu')(d)
-    elif ratio == 32:
-        e = MaxPooling2D((2, 2))(e)
-        e = Conv2D(32, (5, 5), activation='relu', padding='same')(e)
-        e = MaxPooling2D((2, 2))(e)
-        e = Conv2D(16, (3, 3), activation='relu', padding='same')(e)
-        e = MaxPooling2D((2, 2))(e)
-        e = Conv2D(8, (3, 3), activation='relu', padding='same')(e)
-        e = MaxPooling2D((2, 2))(e)
-        e = Conv2D(3, (3, 3), activation='relu', padding='same')(e)
-
-        d = Conv2DTranspose(1, kernel_size=(1, 1), padding="SAME", strides=(2, 2), activation='relu')(e)
-        d = Conv2DTranspose(8, kernel_size=(3, 3), padding="SAME", activation='relu')(d)
-        d = Conv2DTranspose(1, kernel_size=(1, 1), padding="SAME", strides=(2, 2), activation='relu')(d)
-        d = Conv2DTranspose(16, kernel_size=(3, 3), padding="SAME", activation='relu')(d)
-        d = Conv2DTranspose(1, kernel_size=(1, 1), padding="SAME", strides=(2, 2), activation='relu')(d)
-        d = Conv2DTranspose(32, kernel_size=(5, 5), padding="SAME", activation='relu')(d)
-        d = Conv2DTranspose(1, kernel_size=(1, 1), padding="SAME", strides=(2, 2), activation='relu')(d)
-        d = Conv2DTranspose(64, kernel_size=(7, 7), padding="SAME", activation='relu')(d)
     
-    
+    if method == 1:
+        if ratio == 2:
+            e = Conv2D(32, (5, 5), activation='relu', padding='same')(e)
+            e = Conv2D(16, (3, 3), activation='relu', padding='same')(e)
+            e = Conv2D(3, (3, 3), activation='relu', padding='same')(e)
+
+            d = Conv2DTranspose(16, kernel_size=(3, 3), padding="SAME", activation='relu')(e)
+            d = Conv2DTranspose(32, kernel_size=(5, 5), padding="SAME", activation='relu')(d)
+            d = Conv2DTranspose(64, kernel_size=(7, 7), padding="SAME", activation='relu')(d)
+        elif ratio == 4:
+            e = MaxPooling2D((2, 2))(e)
+            e = Conv2D(32, (5, 5), activation='relu', padding='same')(e)
+            e = Conv2D(16, (3, 3), activation='relu', padding='same')(e)
+            e = Conv2D(3, (3, 3), activation='relu', padding='same')(e)
+
+            d = Conv2DTranspose(16, kernel_size=(3, 3), padding="SAME", activation='relu')(e)
+            d = Conv2DTranspose(32, kernel_size=(5, 5), padding="SAME", activation='relu')(d)
+            d = Conv2DTranspose(1, kernel_size=(1, 1), padding="SAME", strides=(2, 2), activation='relu')(d)
+            d = Conv2DTranspose(64, kernel_size=(7, 7), padding="SAME", activation='relu')(d)
+        elif ratio == 8:
+            e = MaxPooling2D((2, 2))(e)
+            e = Conv2D(32, (5, 5), activation='relu', padding='same')(e)
+            e = MaxPooling2D((2, 2))(e)
+            e = Conv2D(16, (3, 3), activation='relu', padding='same')(e)
+            e = Conv2D(3, (3, 3), activation='relu', padding='same')(e)
+
+            d = Conv2DTranspose(16, kernel_size=(3, 3), padding="SAME", activation='relu')(e)
+            d = Conv2DTranspose(1, kernel_size=(1, 1), padding="SAME", strides=(2, 2), activation='relu')(d)
+            d = Conv2DTranspose(32, kernel_size=(5, 5), padding="SAME", activation='relu')(d)
+            d = Conv2DTranspose(1, kernel_size=(1, 1), padding="SAME", strides=(2, 2), activation='relu')(d)
+            d = Conv2DTranspose(64, kernel_size=(7, 7), padding="SAME", activation='relu')(d)
+        elif ratio == 16:
+            e = MaxPooling2D((2, 2))(e)
+            e = Conv2D(32, (5, 5), activation='relu', padding='same')(e)
+            e = MaxPooling2D((2, 2))(e)
+            e = Conv2D(16, (3, 3), activation='relu', padding='same')(e)
+            e = MaxPooling2D((2, 2))(e)
+            e = Conv2D(3, (3, 3), activation='relu', padding='same')(e)
+
+            d = Conv2DTranspose(1, kernel_size=(1, 1), padding="SAME", strides=(2, 2), activation='relu')(e)
+            d = Conv2DTranspose(16, kernel_size=(3, 3), padding="SAME", activation='relu')(d)
+            d = Conv2DTranspose(1, kernel_size=(1, 1), padding="SAME", strides=(2, 2), activation='relu')(d)
+            d = Conv2DTranspose(32, kernel_size=(5, 5), padding="SAME", activation='relu')(d)
+            d = Conv2DTranspose(1, kernel_size=(1, 1), padding="SAME", strides=(2, 2), activation='relu')(d)
+            d = Conv2DTranspose(64, kernel_size=(7, 7), padding="SAME", activation='relu')(d)
+        elif ratio == 32:
+            e = MaxPooling2D((2, 2))(e)
+            e = Conv2D(32, (5, 5), activation='relu', padding='same')(e)
+            e = MaxPooling2D((2, 2))(e)
+            e = Conv2D(16, (3, 3), activation='relu', padding='same')(e)
+            e = MaxPooling2D((2, 2))(e)
+            e = Conv2D(8, (3, 3), activation='relu', padding='same')(e)
+            e = MaxPooling2D((2, 2))(e)
+            e = Conv2D(3, (3, 3), activation='relu', padding='same')(e)
+
+            d = Conv2DTranspose(1, kernel_size=(1, 1), padding="SAME", strides=(2, 2), activation='relu')(e)
+            d = Conv2DTranspose(8, kernel_size=(3, 3), padding="SAME", activation='relu')(d)
+            d = Conv2DTranspose(1, kernel_size=(1, 1), padding="SAME", strides=(2, 2), activation='relu')(d)
+            d = Conv2DTranspose(16, kernel_size=(3, 3), padding="SAME", activation='relu')(d)
+            d = Conv2DTranspose(1, kernel_size=(1, 1), padding="SAME", strides=(2, 2), activation='relu')(d)
+            d = Conv2DTranspose(32, kernel_size=(5, 5), padding="SAME", activation='relu')(d)
+            d = Conv2DTranspose(1, kernel_size=(1, 1), padding="SAME", strides=(2, 2), activation='relu')(d)
+            d = Conv2DTranspose(64, kernel_size=(7, 7), padding="SAME", activation='relu')(d)
+    elif method == 2:
+        if ratio == 2:
+            e = Conv2D(32, (5, 5), activation='relu', padding='same')(e)
+            e = Conv2D(16, (3, 3), activation='relu', padding='same')(e)
+            e = Conv2D(8, (3, 3), activation='relu', padding='same')(e)
+            e = Conv2D(3, (3, 3), activation='relu', padding='same')(e)
+
+            d = Conv2DTranspose(8, kernel_size=(3, 3), padding="SAME", activation='relu')(e)
+            d = Conv2DTranspose(16, kernel_size=(3, 3), padding="SAME", activation='relu')(d)
+            d = Conv2DTranspose(32, kernel_size=(5, 5), padding="SAME", activation='relu')(d)
+            d = Conv2DTranspose(64, kernel_size=(7, 7), padding="SAME", activation='relu')(d)
+        elif ratio == 4:
+            e = Conv2D(32, (5, 5), activation='relu', padding='same', strides=(2, 2))(e)
+            e = Conv2D(16, (3, 3), activation='relu', padding='same')(e)
+            e = Conv2D(8, (3, 3), activation='relu', padding='same')(e)
+            e = Conv2D(3, (3, 3), activation='relu', padding='same')(e)
+
+            d = Conv2DTranspose(8, kernel_size=(3, 3), padding="SAME", activation='relu')(e)
+            d = Conv2DTranspose(16, kernel_size=(3, 3), padding="SAME", activation='relu')(d)
+            d = Conv2DTranspose(32, kernel_size=(5, 5), padding="SAME", activation='relu')(d)
+            d = Conv2DTranspose(64, kernel_size=(7, 7), padding="SAME", activation='relu', strides=(2, 2))(d)
+        elif ratio == 8:
+            e = Conv2D(32, (5, 5), activation='relu', padding='same', strides=(2, 2))(e)
+            e = Conv2D(16, (3, 3), activation='relu', padding='same', strides=(2, 2))(e)
+            e = Conv2D(8, (3, 3), activation='relu', padding='same')(e)
+            e = Conv2D(3, (3, 3), activation='relu', padding='same')(e)
+
+            d = Conv2DTranspose(8, kernel_size=(3, 3), padding="SAME", activation='relu')(e)
+            d = Conv2DTranspose(16, kernel_size=(3, 3), padding="SAME", activation='relu')(d)
+            d = Conv2DTranspose(32, kernel_size=(5, 5), padding="SAME", activation='relu', strides=(2, 2))(d)
+            d = Conv2DTranspose(64, kernel_size=(7, 7), padding="SAME", activation='relu', strides=(2, 2))(d)
+        elif ratio == 16:
+            e = Conv2D(32, (5, 5), activation='relu', padding='same', strides=(2, 2))(e)
+            e = Conv2D(16, (3, 3), activation='relu', padding='same', strides=(2, 2))(e)
+            e = Conv2D(8, (3, 3), activation='relu', padding='same', strides=(2, 2))(e)
+            e = Conv2D(3, (3, 3), activation='relu', padding='same')(e)
+
+            d = Conv2DTranspose(8, kernel_size=(3, 3), padding="SAME", activation='relu')(e)
+            d = Conv2DTranspose(16, kernel_size=(3, 3), padding="SAME", activation='relu', strides=(2, 2))(d)
+            d = Conv2DTranspose(32, kernel_size=(5, 5), padding="SAME", activation='relu', strides=(2, 2))(d)
+            d = Conv2DTranspose(64, kernel_size=(7, 7), padding="SAME", activation='relu', strides=(2, 2))(d)
+        elif ratio == 32:
+            e = Conv2D(32, (5, 5), activation='relu', padding='same', strides=(2, 2))(e)
+            e = Conv2D(16, (3, 3), activation='relu', padding='same', strides=(2, 2))(e)
+            e = Conv2D(8, (3, 3), activation='relu', padding='same', strides=(2, 2))(e)
+            e = Conv2D(3, (3, 3), activation='relu', padding='same', strides=(2, 2))(e)
+
+            d = Conv2DTranspose(8, kernel_size=(3, 3), padding="SAME", activation='relu', strides=(2, 2))(e)
+            d = Conv2DTranspose(16, kernel_size=(3, 3), padding="SAME", activation='relu', strides=(2, 2))(d)
+            d = Conv2DTranspose(32, kernel_size=(5, 5), padding="SAME", activation='relu', strides=(2, 2))(d)
+            d = Conv2DTranspose(64, kernel_size=(7, 7), padding="SAME", activation='relu', strides=(2, 2))(d)
+
     decoded = Conv2DTranspose(3, kernel_size=(3, 3), padding="SAME", strides=(2, 2), activation='relu')(d)
 
     autoencoder = Model(input_img, decoded)
@@ -148,4 +200,5 @@ def conv(orig_imgs, ratio, train_percentage, learning_rate, epochs, pic_name):
     psnr_file.close()
     print(psnr_avg)
 
-# conv(imgs_basketball, 4, 80, 1e-3, 500, 'test_ball')
+
+# conv(imgs_basketball, 4, 80, 1e-3, 500, 'test_ball', 1)
