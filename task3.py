@@ -151,7 +151,6 @@ def conv(orig_imgs, ratio, train_percentage, learning_rate, epochs, batch_size, 
             e = Conv2D(64, (7, 7), activation='relu', padding='same', strides=(2, 1))(input_img)
             e = Conv2D(32, (5, 5), activation='relu', padding='same', strides=(2, 2))(e)
             e = Conv2D(16, (3, 3), activation='relu', padding='same', strides=(2, 2))(e)
-            e = Conv2D(8, (3, 3), activation='relu', padding='same')(e)
             e = Conv2D(3, (3, 3), activation='relu', padding='same')(e)
 
             d = Conv2DTranspose(16, kernel_size=(3, 3), padding="SAME", activation='relu')(e)
